@@ -20,11 +20,13 @@ describe('merge', () => {
   });
 
   it('does not mutate the provided arguments', () => {
-    const objA = {keyA: 1};
-    const objB = {keyB: 2};
+    const objA = {keyA: {nestedA: 1}};
+    const objB = {keyA: {nestedA: 2}};
     const mergedObject = merge(objA, objB);
     expect(mergedObject).not.toBe(objA);
     expect(mergedObject).not.toBe(objB);
+    expect(objA).toStrictEqual({keyA: {nestedA: 1}});
+    expect(objB).toStrictEqual({keyA: {nestedA: 2}});
   });
 
   it('merges complex objects', () => {
