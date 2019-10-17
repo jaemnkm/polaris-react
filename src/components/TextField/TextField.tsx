@@ -1,13 +1,17 @@
 import React, {useState, useEffect, useRef, useCallback} from 'react';
 import {addEventListener} from '@shopify/javascript-utilities/events';
-import {CircleCancelMinor} from '@shopify/polaris-icons';
+import {
+  CircleCancelMinor,
+  ChevronDownMinor,
+  ChevronUpMinor,
+} from '@shopify/polaris-icons';
 import {VisuallyHidden} from '../VisuallyHidden';
 import {classNames, variationName} from '../../utilities/css';
 import {useI18n} from '../../utilities/i18n';
 import {useUniqueId} from '../../utilities/unique-id';
 import {Labelled, Action, helpTextID, labelID} from '../Labelled';
 import {Connected} from '../Connected';
-
+import {useComboBox} from '../../utilities/combo-box';
 import {Error, Key} from '../../types';
 import {Icon} from '../Icon';
 import {Resizer, Spinner} from './components';
@@ -164,6 +168,7 @@ export function TextField({
   const [height, setHeight] = useState<number | null>(null);
   const [focus, setFocus] = useState(Boolean(focused));
   const [isMounted, setIsMounted] = useState(false);
+  const comboBox = useComboBox();
 
   const id = useUniqueId('TextField', idProp);
 
@@ -175,6 +180,10 @@ export function TextField({
   useEffect(() => {
     setIsMounted(true);
   }, []);
+
+  useEffect(() => {
+    comboBox && comboBox.setTextFieldId(id);
+  }, [comboBox, id]);
 
   useEffect(() => {
     const input = inputRef.current;
@@ -238,7 +247,7 @@ export function TextField({
   ) : null;
 
   const clearButtonMarkup =
-    clearButton && normalizedValue !== '' ? (
+    (clearButton || comboBox) && normalizedValue !== '' ? (
       <button
         type="button"
         testID="clearButton"
@@ -431,6 +440,7 @@ export function TextField({
 
   function handleClearButtonPress() {
     onClearButtonClick && onClearButtonClick(id);
+    !onClearButtonClick && onChange && onChange('', id);
   }
 
   function handleKeyPress(event: React.KeyboardEvent) {

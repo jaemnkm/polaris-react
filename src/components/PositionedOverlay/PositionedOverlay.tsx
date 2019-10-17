@@ -196,7 +196,7 @@ export class PositionedOverlay extends React.PureComponent<
           fixed,
         } = this.props;
 
-        const textFieldActivator = activator.querySelector('input');
+        const textFieldActivator = activator;
 
         const activatorRect =
           textFieldActivator != null
