@@ -1,9 +1,33 @@
 import React, {useState, useCallback} from 'react';
 import {mountWithAppProvider, findByTestID} from 'test-utilities/legacy';
 import {Popover} from '../Popover';
+import * as SetActivatorAttributes from '../set-activator-attributes';
 
 describe('<Popover />', () => {
   const spy = jest.fn();
+  let setActivatorAttributesSpy: jest.SpyInstance;
+
+  beforeEach(() => {
+    setActivatorAttributesSpy = jest.spyOn(
+      SetActivatorAttributes,
+      'setActivatorAttributes',
+    );
+  });
+
+  afterEach(() => {
+    setActivatorAttributesSpy.mockRestore();
+  });
+
+  it('invokes setActivatorAttributes with active, ariaHasPopup and id', () => {
+    mountWithAppProvider(
+      <Popover active={false} activator={<div>Activator</div>} onClose={spy} />,
+    );
+
+    expect(setActivatorAttributesSpy).toHaveBeenLastCalledWith(
+      expect.any(Object),
+      {active: false, ariaHaspopup: undefined, id: 'Popover1'},
+    );
+  });
 
   it('renders a portal', () => {
     const popover = mountWithAppProvider(

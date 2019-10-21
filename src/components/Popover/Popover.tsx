@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {AriaAttributes} from 'react';
 import {createUniqueIDFactory} from '@shopify/javascript-utilities/other';
 import {
   focusFirstFocusableNode,
@@ -8,6 +8,7 @@ import {
 import {PreferredPosition, PreferredAlignment} from '../PositionedOverlay';
 import {Portal} from '../Portal';
 import {CloseSource, Pane, PopoverOverlay, Section} from './components';
+import {setActivatorAttributes} from './set-activator-attributes';
 
 export {CloseSource};
 
@@ -37,6 +38,8 @@ export interface PopoverProps {
   fullHeight?: boolean;
   /** Remains in a fixed position */
   fixed?: boolean;
+  /** Used to illustrate the type of popover element */
+  ariaHaspopup?: AriaAttributes['aria-haspopup'];
   /** Callback when popover is closed */
   onClose(source: CloseSource): void;
 }
@@ -111,18 +114,19 @@ export class Popover extends React.PureComponent<PopoverProps, State> {
   }
 
   private setAccessibilityAttributes() {
-    const {id, activatorContainer} = this;
+    const {
+      id,
+      activatorContainer,
+      props: {ariaHaspopup, active},
+    } = this;
+
     if (activatorContainer == null) {
       return;
     }
 
     const firstFocusable = findFirstFocusableNode(activatorContainer);
     const focusableActivator = firstFocusable || activatorContainer;
-    focusableActivator.tabIndex = focusableActivator.tabIndex || 0;
-    focusableActivator.setAttribute('aria-controls', id);
-    focusableActivator.setAttribute('aria-owns', id);
-    focusableActivator.setAttribute('aria-haspopup', 'true');
-    focusableActivator.setAttribute('aria-expanded', String(this.props.active));
+    setActivatorAttributes(focusableActivator, {id, active, ariaHaspopup});
   }
 
   private handleClose = (source: CloseSource) => {
