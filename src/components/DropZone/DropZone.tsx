@@ -164,7 +164,7 @@ export function DropZone({
   const [numFiles, setNumFiles] = useState(0);
   const [size, setSize] = useState('extraLarge');
 
-  const {translate} = useI18n();
+  const i18n = useI18n();
   const dropNode = dropOnPage ? document : node;
 
   const getValidatedFiles = useCallback(
@@ -297,11 +297,11 @@ export function DropZone({
   const suffix = capitalize(type);
   const overlayTextWithDefault =
     overlayText === undefined
-      ? translate(`Polaris.DropZone.overlayText${suffix}`)
+      ? i18n.translate(`Polaris.DropZone.overlayText${suffix}`)
       : overlayText;
   const errorOverlayTextWithDefault =
     errorOverlayText === undefined
-      ? translate(`Polaris.DropZone.errorOverlayText${suffix}`)
+      ? i18n.translate(`Polaris.DropZone.errorOverlayText${suffix}`)
       : errorOverlayText;
   const inputAttributes: object = {
     id: currentID,
@@ -337,7 +337,8 @@ export function DropZone({
     (internalError || error) &&
     overlayMarkup(CircleAlertMajorMonotone, 'red', errorOverlayTextWithDefault);
 
-  const labelValue = label || translate('Polaris.DropZone.FileUpload.label');
+  const labelValue =
+    label || i18n.translate('Polaris.DropZone.FileUpload.label');
   const labelHiddenValue = label ? labelHidden : true;
 
   const context = {
