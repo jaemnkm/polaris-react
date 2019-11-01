@@ -5,7 +5,7 @@ import * as Stories from './stories';
 
 export function KitchenSink() {
   const exclude = new RegExp(
-    'AllExamples|frame|theme|ContextualSaveBar|topbar|defaultloading',
+    'AllExamples|frame|theme|ContextualSaveBar|topbar|defaultloading|modal|sheet',
     'i',
   );
   const keys = Object.keys(Stories);
@@ -16,6 +16,18 @@ export function KitchenSink() {
     .map((key, index) => {
       // eslint-disable-next-line import/namespace
       const JsxProxy = Stories[key];
-      return <JsxProxy key={index} />;
+      return (
+        <div key={index}>
+          <JsxProxy />
+          <hr
+            style={{
+              border: 'none',
+              borderTop: '2px dotted magenta',
+              margin: 20,
+              opacity: 0.5,
+            }}
+          />
+        </div>
+      );
     });
 }
